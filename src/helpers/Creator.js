@@ -45,13 +45,6 @@ class Creator {
     
   }
 
-  createHeading(text) {
-    return new Doc.Paragraph(text).heading1().thematicBreak();
-  }
-
-  createSubHeading(text) {
-    return new Doc.Paragraph(text).heading2();
-  }
 
   createInstitutionHeader(institutionName, dateText) {
     const paragraph = new Doc.Paragraph().maxRightTabStop();
@@ -68,18 +61,6 @@ class Creator {
     return new Doc.Paragraph(text).bullet();
   }
 
-  createSkillList(skills) {
-    const paragraph = new Doc.Paragraph();
-    const skillConcat = skills.map((skill) => skill).re(", ") + ".";
-
-    paragraph.addRun(new Doc.TextRun(skillConcat));
-
-    return paragraph;
-  } 
-
-  splitParagraphIntoBullets(text) {
-    return text.split("\n\n");
-  }
 }
 
 export default Creator;
