@@ -4,12 +4,45 @@ class Creator {
   constructor(person) {
     this.person = person;
     this.document = new Doc.Document();
+    this.document.Header.createParagraph(" ");
+    this.document.Footer.createParagraph(" ");
   }
 
   createResume() {
-    let exporter = new Doc.LocalPacker(this.document);
-    exporter.pack(this.person.name + "_resume");
-    exporter.packPdf(this.person.name + "_resume")
+    this.addTitle(this.person.name);
+    this.addSkills();
+    this.generateFiles();
+  }
+
+  addTitle(title) {
+    const paragraph = new Doc.Paragraph(title).heading1().center().thematicBreak();
+    this.document.addParagraph(paragraph);
+  }
+
+  addSkills() {
+    this.addTitle('Skills');
+    let skills = this.person.skills.map((skill) => {
+      return skill.replace('#', '');
+    });
+    skills.forEach(skill => {
+      this.document.addParagraph(this.createBullet(skill));
+    });
+    // paragraph.addRun(new Doc.TextRun(skills));
+  }
+
+  generateFiles() {
+    let docExporter = new Doc.LocalPacker(this.document);
+    docExporter.pack(this.person.name + "_resume")
+            .then(() => {
+              console.log("Docx Generated");
+              console.log("Building PDF, Might take some time.....");
+            });
+    let pdfExporter = new Doc.LocalPacker(this.document);
+    pdfExporter.packPdf(this.person.name + "_resume")
+            .then(() => {
+              console.log("PDF Generated");
+            });
+    
   }
 
   createHeading(text) {
@@ -37,7 +70,7 @@ class Creator {
 
   createSkillList(skills) {
     const paragraph = new Doc.Paragraph();
-    const skillConcat = skills.map((skill) => skill.name).join(", ") + ".";
+    const skillConcat = skills.map((skill) => skill).re(", ") + ".";
 
     paragraph.addRun(new Doc.TextRun(skillConcat));
 

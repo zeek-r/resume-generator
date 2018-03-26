@@ -36,7 +36,6 @@ function fileProcessor(filename) {
   var dataSource = require('./data-source/' + filename);
   dataSource.default.name = 'Roshan';
   var person = new _Person2.default(dataSource['default']);
-  console.log(person);
   var doc = new _Creator2.default(person);
   doc.createResume();
 }
