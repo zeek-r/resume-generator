@@ -1,0 +1,26 @@
+{
+  "name": "resume-generator",
+  "version": "1.0.0",
+  "description": "A node project for generating resume from json data source in pdf and docx",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zeek-r/resume-generator.git"
+  },
+  "author": "Roshan Bist",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zeek-r/resume-generator/issues"
+  },
+  "homepage": "https://github.com/zeek-r/resume-generator#readme",
+  "dependencies": {
+    "docx": "^3.3.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1"
+  }
+}
