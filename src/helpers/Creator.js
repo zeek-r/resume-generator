@@ -1,6 +1,8 @@
 const Doc = require('docx');
 
 class Creator {
+
+  /* Constructor, takes person object as input, and also instantiates document */
   constructor(person) {
     this.person = person;
     this.document = new Doc.Document();
@@ -8,6 +10,7 @@ class Creator {
     this.document.Footer.createParagraph(" ");
   }
 
+  /*Creates Resume with Skill, Education and Experience field */
   createResume() {
     this.addTitle(this.person.name);
     this.addSkills();
@@ -16,6 +19,7 @@ class Creator {
     this.generateFiles();
   }
 
+  /* Adds Name title to Resume */
   addTitle(title) {
     const mainTitle = new Doc.Paragraph();
     const text = new Doc.TextRun(title).bold().allCaps();
@@ -25,6 +29,7 @@ class Creator {
     this.addBreak();
   }
 
+  /* Adds Section title like Skill, Education etc to Resume */
   addSectionTitle(title) {
     const sectionTitle = new Doc.Paragraph();
     const text = new Doc.TextRun(title).bold().allCaps();
@@ -33,6 +38,7 @@ class Creator {
     this.document.addParagraph(sectionTitle);
   }
 
+  /* Creates Headers inside Sections like Skill, Education */
   addSubSectionTitle(title) {
     const paragraph = new Doc.Paragraph();
     const subSectionTitle = new Doc.TextRun(title).bold().underline().allCaps();
@@ -41,6 +47,7 @@ class Creator {
     this.document.addParagraph(paragraph);
   }
 
+  /* Adds Skill Section to resume */
   addSkills() {
     this.addSectionTitle('Skills');
     let skills = this.person.skills.map((skill) => {
@@ -52,6 +59,7 @@ class Creator {
     this.document.addParagraph(this.addBreak());
   }
 
+  /* Adds Education Section to resume */  
   addEducation() {
     this.addSectionTitle('Education');
     this.person.education.forEach(education => {
@@ -62,6 +70,7 @@ class Creator {
     });
   }
 
+  /* Adds Experience section to resume */ 
   addExperiences() {
     this.addSectionTitle('Experiences');
     this.person.experiences.forEach(experience => {
@@ -76,6 +85,7 @@ class Creator {
     });
   }
     
+  /* Generates Docx and Pdf File in the root directory of the project */
   generateFiles() {
     let docExporter = new Doc.LocalPacker(this.document);
     docExporter.pack(this.person.name + "_resume")
@@ -91,7 +101,7 @@ class Creator {
     
   }
 
-
+  /** Creates Institution header with date like Work, School */
   createInstitutionHeader(institutionName, dateText = 'Current') {
     const paragraph = new Doc.Paragraph().maxRightTabStop();
     const institution = new Doc.TextRun(institutionName).bold();
@@ -102,14 +112,18 @@ class Creator {
     this.document.addParagraph(paragraph);
   }
 
+  /* Returns Bullet text of the input */
   createBullet(text) {
     return new Doc.Paragraph(text).bullet();
   }
+
+  /* Returns Empty Paragraph use for creating line break */
   addBreak() {
     const paragraph = new Doc.Paragraph(" ");
     return paragraph;
   }
 
+  /* Adds Logo of the institution, if available in the data-source directory */
   addLogo(logo) {
     try {
       const logo = this.document.createImage('./src/data-source/'+ logo);

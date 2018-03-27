@@ -1,40 +1,89 @@
 'use strict';
 
+var run = function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+    var initialData;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.next = 2;
+            return _Inquirer2.default.askInitialData();
+
+          case 2:
+            initialData = _context.sent;
+
+            fileProcessor(initialData);
+
+          case 4:
+          case 'end':
+            return _context.stop();
+        }
+      }
+    }, _callee, this);
+  }));
+
+  return function run() {
+    return _ref.apply(this, arguments);
+  };
+}();
+
 var _readline = require('readline');
 
 var _readline2 = _interopRequireDefault(_readline);
-
-var _fs = require('fs');
-
-var _fs2 = _interopRequireDefault(_fs);
-
-var _Person = require('./helpers/Person');
-
-var _Person2 = _interopRequireDefault(_Person);
 
 var _Creator = require('./helpers/Creator');
 
 var _Creator2 = _interopRequireDefault(_Creator);
 
+var _Inquirer = require('./helpers/Inquirer');
+
+var _Inquirer2 = _interopRequireDefault(_Inquirer);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var commandLine = process.argv;
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
+var minimist = require('minimist')(process.argv.splice(2));
 
 var ioInterface = _readline2.default.createInterface({
   input: process.stdin,
   output: process.stdout
 });
 
-if (commandLine.length <= 2) {
-  ioInterface.question("Please provide yourname and filename for data-source: ", function (dataSource) {
-    ioInterface.close();
-    fileProcessor(dataSource);
-  });
+main();
+
+function commandLine() {
+  if (minimist.help) {
+    var Usage = 'Usage: resume-generator --flags = values\n-flags :\n--name, -n = [fullName of the Person],\n--file, -f = [source filename for data],\n--font, -fn = [font Name for the document](optional),\n--font-size, -fs = [font size of the document body](optional)\n--help = Help Menu';
+    console.log(Usage);
+    process.exit(0);
+  } else {
+    var initialData = {
+      fullName: minimist.name || minimist.n,
+      fileName: minimist.file || minimist.f,
+      fontName: minimist.font || minimist.fn,
+      fontSize: minimist.font - size || minimist.fs
+    };
+    fileProcessor(initialData);
+  }
 }
 
-function fileProcessor(filename) {
-  var dataSource = require('./data-source/' + filename);
-  dataSource.default.name = 'Roshan';
-  var doc = new _Creator2.default(dataSource['default']);
-  doc.createResume();
+function main() {
+  if (Object.keys(minimist).length === 1) {
+    run();
+  } else {
+    commandLine();
+  }
+}
+
+function fileProcessor(initialData) {
+  try {
+    var dataSource = require('./data-source/' + initialData.fileName);
+    dataSource.default.name = initialData.fullName;
+    var doc = new _Creator2.default(dataSource['default']);
+    doc.createResume();
+  } catch (error) {
+    console.log("Error opening " + initialData.fileName + " , Please specify the filename correctly");
+  }
 }
