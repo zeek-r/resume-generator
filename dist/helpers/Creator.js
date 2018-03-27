@@ -32,14 +32,29 @@ var Creator = function () {
   }, {
     key: "addTitle",
     value: function addTitle(title) {
-      var paragraph = new Doc.Paragraph(title).heading1().center().thematicBreak();
-      this.document.addParagraph(paragraph);
+      var mainTitle = new Doc.Paragraph();
+      var text = new Doc.TextRun(title).bold().allCaps();
+      mainTitle.addRun(text);
+      mainTitle.center().heading1().thematicBreak();
+      this.document.addParagraph(mainTitle);
       this.addBreak();
     }
   }, {
     key: "addSectionTitle",
     value: function addSectionTitle(title) {
-      var paragraph = new Doc.Paragraph(title).heading2().center().thematicBreak();
+      var sectionTitle = new Doc.Paragraph();
+      var text = new Doc.TextRun(title).bold().allCaps();
+      sectionTitle.addRun(text);
+      sectionTitle.center().heading2().thematicBreak();
+      this.document.addParagraph(sectionTitle);
+    }
+  }, {
+    key: "addSubSectionTitle",
+    value: function addSubSectionTitle(title) {
+      var paragraph = new Doc.Paragraph();
+      var subSectionTitle = new Doc.TextRun(title).bold().underline().allCaps();
+      paragraph.addRun(subSectionTitle);
+      paragraph.center();
       this.document.addParagraph(paragraph);
     }
   }, {
@@ -64,7 +79,7 @@ var Creator = function () {
       this.addSectionTitle('Education');
       this.person.education.forEach(function (education) {
         _this2.addLogo(education.logo);
-        _this2.document.addParagraph(_this2.createInstitutionHeader(education.school_name, education.year));
+        _this2.createInstitutionHeader(education.school_name, education.year);
         _this2.document.addParagraph(_this2.createBullet(education.title + ', ' + education.level));
         _this2.document.addParagraph(_this2.addBreak());
       });
@@ -72,8 +87,19 @@ var Creator = function () {
   }, {
     key: "addExperiences",
     value: function addExperiences() {
+      var _this3 = this;
+
       this.addSectionTitle('Experiences');
-      console.log(this.person);
+      this.person.experiences.forEach(function (experience) {
+        _this3.addLogo(experience.company_logo);
+        _this3.createInstitutionHeader(experience.company, experience.work_year);
+        _this3.document.addParagraph(_this3.createBullet(experience.postion));
+        _this3.addSubSectionTitle('duties');
+        experience.duties.forEach(function (duty) {
+          _this3.document.addParagraph(_this3.createBullet(duty));
+        });
+        _this3.document.addParagraph(_this3.addBreak());
+      });
     }
   }, {
     key: "generateFiles",
@@ -90,15 +116,16 @@ var Creator = function () {
     }
   }, {
     key: "createInstitutionHeader",
-    value: function createInstitutionHeader(institutionName, dateText) {
+    value: function createInstitutionHeader(institutionName) {
+      var dateText = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'Current';
+
       var paragraph = new Doc.Paragraph().maxRightTabStop();
       var institution = new Doc.TextRun(institutionName).bold();
       var date = new Doc.TextRun(dateText).tab().bold();
 
       paragraph.addRun(institution);
       paragraph.addRun(date);
-
-      return paragraph;
+      this.document.addParagraph(paragraph);
     }
   }, {
     key: "createBullet",

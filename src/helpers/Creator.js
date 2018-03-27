@@ -17,13 +17,27 @@ class Creator {
   }
 
   addTitle(title) {
-    const paragraph = new Doc.Paragraph(title).heading1().center().thematicBreak();
-    this.document.addParagraph(paragraph);
+    const mainTitle = new Doc.Paragraph();
+    const text = new Doc.TextRun(title).bold().allCaps();
+    mainTitle.addRun(text);
+    mainTitle.center().heading1().thematicBreak();
+    this.document.addParagraph(mainTitle);
     this.addBreak();
   }
 
   addSectionTitle(title) {
-    const paragraph = new Doc.Paragraph(title).heading2().center().thematicBreak();
+    const sectionTitle = new Doc.Paragraph();
+    const text = new Doc.TextRun(title).bold().allCaps();
+    sectionTitle.addRun(text);
+    sectionTitle.center().heading2().thematicBreak();
+    this.document.addParagraph(sectionTitle);
+  }
+
+  addSubSectionTitle(title) {
+    const paragraph = new Doc.Paragraph();
+    const subSectionTitle = new Doc.TextRun(title).bold().underline().allCaps();
+    paragraph.addRun(subSectionTitle);
+    paragraph.center();
     this.document.addParagraph(paragraph);
   }
 
@@ -42,7 +56,7 @@ class Creator {
     this.addSectionTitle('Education');
     this.person.education.forEach(education => {
       this.addLogo(education.logo);
-      this.document.addParagraph(this.createInstitutionHeader(education.school_name, education.year));
+      this.createInstitutionHeader(education.school_name, education.year);
       this.document.addParagraph(this.createBullet(education.title + ', ' + education.level));
       this.document.addParagraph(this.addBreak());
     });
@@ -50,7 +64,16 @@ class Creator {
 
   addExperiences() {
     this.addSectionTitle('Experiences');
-    console.log(this.person);
+    this.person.experiences.forEach(experience => {
+      this.addLogo(experience.company_logo);
+      this.createInstitutionHeader(experience.company, experience.work_year);
+      this.document.addParagraph(this.createBullet(experience.postion));
+      this.addSubSectionTitle('duties');
+      experience.duties.forEach(duty => {
+        this.document.addParagraph(this.createBullet(duty));
+      });
+      this.document.addParagraph(this.addBreak());
+    });
   }
     
   generateFiles() {
@@ -69,15 +92,14 @@ class Creator {
   }
 
 
-  createInstitutionHeader(institutionName, dateText) {
+  createInstitutionHeader(institutionName, dateText = 'Current') {
     const paragraph = new Doc.Paragraph().maxRightTabStop();
     const institution = new Doc.TextRun(institutionName).bold();
     const date = new Doc.TextRun(dateText).tab().bold();
 
     paragraph.addRun(institution);
     paragraph.addRun(date);
-
-    return paragraph;
+    this.document.addParagraph(paragraph);
   }
 
   createBullet(text) {
