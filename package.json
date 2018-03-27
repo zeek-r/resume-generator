@@ -19,11 +19,17 @@
   },
   "homepage": "https://github.com/zeek-r/resume-generator#readme",
   "dependencies": {
-    "docx": "^3.3.0"
+    "docx": "^3.3.0",
+    "inquirer": "^5.2.0",
+    "minimist": "^1.2.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
+    "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1"
+  },
+  "bin": {
+    "resume-generator": "./index.js"
   }
 }
