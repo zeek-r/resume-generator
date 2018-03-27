@@ -21,7 +21,6 @@ if(commandLine.length <= 2)
 function fileProcessor(filename) {
   let dataSource = require('./data-source/' + filename);
   dataSource.default.name = 'Roshan';
-  const person = new Person(dataSource['default']);
-  const doc  = new Doc(person);
+  const doc  = new Doc(dataSource['default']);
   doc.createResume();
 }

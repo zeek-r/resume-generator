@@ -26,6 +26,7 @@ var Creator = function () {
       this.addTitle(this.person.name);
       this.addSkills();
       this.addEducation();
+      this.addExperiences();
       this.generateFiles();
     }
   }, {
@@ -33,38 +34,46 @@ var Creator = function () {
     value: function addTitle(title) {
       var paragraph = new Doc.Paragraph(title).heading1().center().thematicBreak();
       this.document.addParagraph(paragraph);
+      this.addBreak();
+    }
+  }, {
+    key: "addSectionTitle",
+    value: function addSectionTitle(title) {
+      var paragraph = new Doc.Paragraph(title).heading2().center().thematicBreak();
+      this.document.addParagraph(paragraph);
     }
   }, {
     key: "addSkills",
     value: function addSkills() {
       var _this = this;
 
-      this.addTitle('Skills');
+      this.addSectionTitle('Skills');
       var skills = this.person.skills.map(function (skill) {
         return skill.replace('#', '');
       });
       skills.forEach(function (skill) {
         _this.document.addParagraph(_this.createBullet(skill));
       });
-      // paragraph.addRun(new Doc.TextRun(skills));
+      this.document.addParagraph(this.addBreak());
     }
   }, {
     key: "addEducation",
     value: function addEducation() {
       var _this2 = this;
 
-      this.addTitle('Education');
+      this.addSectionTitle('Education');
       this.person.education.forEach(function (education) {
-        try {
-          var logo = _this2.document.createImage('./src/data-source/' + education.logo);
-          logo.right();
-          _this2.document.addParagraph(logo);
-        } catch (error) {
-          console.log("Error: " + education.logo + "Not Found, Skipping adding that image");
-        }
+        _this2.addLogo(education.logo);
         _this2.document.addParagraph(_this2.createInstitutionHeader(education.school_name, education.year));
         _this2.document.addParagraph(_this2.createBullet(education.title + ', ' + education.level));
+        _this2.document.addParagraph(_this2.addBreak());
       });
+    }
+  }, {
+    key: "addExperiences",
+    value: function addExperiences() {
+      this.addSectionTitle('Experiences');
+      console.log(this.person);
     }
   }, {
     key: "generateFiles",
@@ -95,6 +104,23 @@ var Creator = function () {
     key: "createBullet",
     value: function createBullet(text) {
       return new Doc.Paragraph(text).bullet();
+    }
+  }, {
+    key: "addBreak",
+    value: function addBreak() {
+      var paragraph = new Doc.Paragraph(" ");
+      return paragraph;
+    }
+  }, {
+    key: "addLogo",
+    value: function addLogo(logo) {
+      try {
+        var _logo = this.document.createImage('./src/data-source/' + _logo);
+        _logo.right();
+        this.document.addParagraph(_logo);
+      } catch (error) {
+        console.log("Error: " + logo + " not found, Skipping adding that image");
+      }
     }
   }]);
 
