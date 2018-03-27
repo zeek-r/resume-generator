@@ -11,6 +11,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var Doc = require('docx');
 
 var Creator = function () {
+
+  /* Constructor, takes person object as input, and also instantiates document */
   function Creator(person) {
     _classCallCheck(this, Creator);
 
@@ -19,6 +21,9 @@ var Creator = function () {
     this.document.Header.createParagraph(" ");
     this.document.Footer.createParagraph(" ");
   }
+
+  /*Creates Resume with Skill, Education and Experience field */
+
 
   _createClass(Creator, [{
     key: "createResume",
@@ -29,6 +34,9 @@ var Creator = function () {
       this.addExperiences();
       this.generateFiles();
     }
+
+    /* Adds Name title to Resume */
+
   }, {
     key: "addTitle",
     value: function addTitle(title) {
@@ -39,6 +47,9 @@ var Creator = function () {
       this.document.addParagraph(mainTitle);
       this.addBreak();
     }
+
+    /* Adds Section title like Skill, Education etc to Resume */
+
   }, {
     key: "addSectionTitle",
     value: function addSectionTitle(title) {
@@ -48,6 +59,9 @@ var Creator = function () {
       sectionTitle.center().heading2().thematicBreak();
       this.document.addParagraph(sectionTitle);
     }
+
+    /* Creates Headers inside Sections like Skill, Education */
+
   }, {
     key: "addSubSectionTitle",
     value: function addSubSectionTitle(title) {
@@ -57,6 +71,9 @@ var Creator = function () {
       paragraph.center();
       this.document.addParagraph(paragraph);
     }
+
+    /* Adds Skill Section to resume */
+
   }, {
     key: "addSkills",
     value: function addSkills() {
@@ -71,6 +88,9 @@ var Creator = function () {
       });
       this.document.addParagraph(this.addBreak());
     }
+
+    /* Adds Education Section to resume */
+
   }, {
     key: "addEducation",
     value: function addEducation() {
@@ -84,6 +104,9 @@ var Creator = function () {
         _this2.document.addParagraph(_this2.addBreak());
       });
     }
+
+    /* Adds Experience section to resume */
+
   }, {
     key: "addExperiences",
     value: function addExperiences() {
@@ -101,6 +124,9 @@ var Creator = function () {
         _this3.document.addParagraph(_this3.addBreak());
       });
     }
+
+    /* Generates Docx and Pdf File in the root directory of the project */
+
   }, {
     key: "generateFiles",
     value: function generateFiles() {
@@ -114,6 +140,9 @@ var Creator = function () {
         console.log("PDF Generated");
       });
     }
+
+    /** Creates Institution header with date like Work, School */
+
   }, {
     key: "createInstitutionHeader",
     value: function createInstitutionHeader(institutionName) {
@@ -127,17 +156,26 @@ var Creator = function () {
       paragraph.addRun(date);
       this.document.addParagraph(paragraph);
     }
+
+    /* Returns Bullet text of the input */
+
   }, {
     key: "createBullet",
     value: function createBullet(text) {
       return new Doc.Paragraph(text).bullet();
     }
+
+    /* Returns Empty Paragraph use for creating line break */
+
   }, {
     key: "addBreak",
     value: function addBreak() {
       var paragraph = new Doc.Paragraph(" ");
       return paragraph;
     }
+
+    /* Adds Logo of the institution, if available in the data-source directory */
+
   }, {
     key: "addLogo",
     value: function addLogo(logo) {
