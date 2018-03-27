@@ -5,7 +5,7 @@ const Data = {
 	education: [
 		{
 			school_name: 'University of Portsmouth',
-			logo: 'portsmouth.jpg',
+			logo: 'portsmouth.png',
 			level: "Bachelorl's Degree",
 			title: 'BSC HONORS IN COMPUTING ',
 			year: '2008-2011',

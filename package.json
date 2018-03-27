@@ -4,7 +4,8 @@
   "description": "A node project for generating resume from json data source in pdf and docx",
   "main": "index.js",
   "scripts": {
-    "make" : "./node_modules/.bin/babel  ./src --experimental --source-maps-inline -d ./dist",
+    "start": "npm run make && node index",
+    "make": "./node_modules/.bin/babel  ./src --experimental --source-maps-inline -d ./dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

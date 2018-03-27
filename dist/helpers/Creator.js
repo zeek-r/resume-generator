@@ -25,6 +25,7 @@ var Creator = function () {
     value: function createResume() {
       this.addTitle(this.person.name);
       this.addSkills();
+      this.addEducation();
       this.generateFiles();
     }
   }, {
@@ -48,6 +49,24 @@ var Creator = function () {
       // paragraph.addRun(new Doc.TextRun(skills));
     }
   }, {
+    key: "addEducation",
+    value: function addEducation() {
+      var _this2 = this;
+
+      this.addTitle('Education');
+      this.person.education.forEach(function (education) {
+        try {
+          var logo = _this2.document.createImage('./src/data-source/' + education.logo);
+          logo.right();
+          _this2.document.addParagraph(logo);
+        } catch (error) {
+          console.log("Error: " + education.logo + "Not Found, Skipping adding that image");
+        }
+        _this2.document.addParagraph(_this2.createInstitutionHeader(education.school_name, education.year));
+        _this2.document.addParagraph(_this2.createBullet(education.title + ', ' + education.level));
+      });
+    }
+  }, {
     key: "generateFiles",
     value: function generateFiles() {
       var docExporter = new Doc.LocalPacker(this.document);
@@ -59,16 +78,6 @@ var Creator = function () {
       pdfExporter.packPdf(this.person.name + "_resume").then(function () {
         console.log("PDF Generated");
       });
-    }
-  }, {
-    key: "createHeading",
-    value: function createHeading(text) {
-      return new Doc.Paragraph(text).heading1().thematicBreak();
-    }
-  }, {
-    key: "createSubHeading",
-    value: function createSubHeading(text) {
-      return new Doc.Paragraph(text).heading2();
     }
   }, {
     key: "createInstitutionHeader",
@@ -86,23 +95,6 @@ var Creator = function () {
     key: "createBullet",
     value: function createBullet(text) {
       return new Doc.Paragraph(text).bullet();
-    }
-  }, {
-    key: "createSkillList",
-    value: function createSkillList(skills) {
-      var paragraph = new Doc.Paragraph();
-      var skillConcat = skills.map(function (skill) {
-        return skill;
-      }).re(", ") + ".";
-
-      paragraph.addRun(new Doc.TextRun(skillConcat));
-
-      return paragraph;
-    }
-  }, {
-    key: "splitParagraphIntoBullets",
-    value: function splitParagraphIntoBullets(text) {
-      return text.split("\n\n");
     }
   }]);
 

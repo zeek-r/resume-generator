@@ -7,7 +7,7 @@ var Data = {
 	skills: ['#PHP', '#JavaScript', '#CSS', '#Codeigniter', '#Laravel', '#VueJS', '#NodeJS', '#ReactJS'],
 	education: [{
 		school_name: 'University of Portsmouth',
-		logo: 'portsmouth.jpg',
+		logo: 'portsmouth.png',
 		level: "Bachelorl's Degree",
 		title: 'BSC HONORS IN COMPUTING ',
 		year: '2008-2011'

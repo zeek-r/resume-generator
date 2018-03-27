@@ -11,6 +11,7 @@ class Creator {
   createResume() {
     this.addTitle(this.person.name);
     this.addSkills();
+    this.addEducation();
     this.generateFiles();
   }
 
@@ -30,6 +31,21 @@ class Creator {
     // paragraph.addRun(new Doc.TextRun(skills));
   }
 
+  addEducation() {
+    this.addTitle('Education');
+    this.person.education.forEach(education => {
+      try {
+        const logo = this.document.createImage('./src/data-source/'+ education.logo);
+        logo.right();
+        this.document.addParagraph(logo);
+      }
+      catch (error){
+        console.log("Error: " + education.logo + "Not Found, Skipping adding that image");
+      }
+      this.document.addParagraph(this.createInstitutionHeader(education.school_name, education.year));
+      this.document.addParagraph(this.createBullet(education.title + ', ' + education.level));
+    });
+  }
   generateFiles() {
     let docExporter = new Doc.LocalPacker(this.document);
     docExporter.pack(this.person.name + "_resume")
