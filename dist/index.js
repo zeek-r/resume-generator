@@ -28,10 +28,6 @@ var run = function () {
   };
 }();
 
-var _readline = require('readline');
-
-var _readline2 = _interopRequireDefault(_readline);
-
 var _Creator = require('./helpers/Creator');
 
 var _Creator2 = _interopRequireDefault(_Creator);
@@ -46,16 +42,9 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 var minimist = require('minimist')(process.argv.splice(2));
 
-var ioInterface = _readline2.default.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
-
-main();
-
 function commandLine() {
   if (minimist.help) {
-    var Usage = 'Usage: resume-generator --flags = values\n-flags :\n--name, -n = [fullName of the Person],\n--file, -f = [source filename for data],\n--font, -fn = [font Name for the document](optional),\n--font-size, -fs = [font size of the document body](optional)\n--help = Help Menu';
+    var Usage = 'Usage: resume-generator --flags = values\n-flags :\n--name, -n = [fullName of the Person],\n--file, -f = [source filename for data],\n--font, -fn = [font Name for the document](optional),\n--fontsize, -fs = [font size of the document body](optional)\n--help = Help Menu';
     console.log(Usage);
     process.exit(0);
   } else {
@@ -63,9 +52,10 @@ function commandLine() {
       fullName: minimist.name || minimist.n,
       fileName: minimist.file || minimist.f,
       fontName: minimist.font || minimist.fn,
-      fontSize: minimist.font - size || minimist.fs
+      fontSize: minimist.fontsize || minimist.fs
     };
     fileProcessor(initialData);
+    process.exit(0);
   }
 }
 
@@ -77,13 +67,16 @@ function main() {
   }
 }
 
+main();
+
 function fileProcessor(initialData) {
   try {
-    var dataSource = require('./data-source/' + initialData.fileName);
+    var dataSource = require("../" + initialData.fileName);
     dataSource.default.name = initialData.fullName;
     var doc = new _Creator2.default(dataSource['default']);
     doc.createResume();
   } catch (error) {
     console.log("Error opening " + initialData.fileName + " , Please specify the filename correctly");
+    console.log(__dirname);
   }
 }

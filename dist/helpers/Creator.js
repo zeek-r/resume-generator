@@ -1,10 +1,16 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Styler = require('./Styler');
+
+var _Styler2 = _interopRequireDefault(_Styler);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -26,7 +32,7 @@ var Creator = function () {
 
 
   _createClass(Creator, [{
-    key: "createResume",
+    key: 'createResume',
     value: function createResume() {
       this.addTitle(this.person.name);
       this.addSkills();
@@ -38,7 +44,7 @@ var Creator = function () {
     /* Adds Name title to Resume */
 
   }, {
-    key: "addTitle",
+    key: 'addTitle',
     value: function addTitle(title) {
       var mainTitle = new Doc.Paragraph();
       var text = new Doc.TextRun(title).bold().allCaps();
@@ -51,7 +57,7 @@ var Creator = function () {
     /* Adds Section title like Skill, Education etc to Resume */
 
   }, {
-    key: "addSectionTitle",
+    key: 'addSectionTitle',
     value: function addSectionTitle(title) {
       var sectionTitle = new Doc.Paragraph();
       var text = new Doc.TextRun(title).bold().allCaps();
@@ -63,7 +69,7 @@ var Creator = function () {
     /* Creates Headers inside Sections like Skill, Education */
 
   }, {
-    key: "addSubSectionTitle",
+    key: 'addSubSectionTitle',
     value: function addSubSectionTitle(title) {
       var paragraph = new Doc.Paragraph();
       var subSectionTitle = new Doc.TextRun(title).bold().underline().allCaps();
@@ -75,7 +81,7 @@ var Creator = function () {
     /* Adds Skill Section to resume */
 
   }, {
-    key: "addSkills",
+    key: 'addSkills',
     value: function addSkills() {
       var _this = this;
 
@@ -92,7 +98,7 @@ var Creator = function () {
     /* Adds Education Section to resume */
 
   }, {
-    key: "addEducation",
+    key: 'addEducation',
     value: function addEducation() {
       var _this2 = this;
 
@@ -108,7 +114,7 @@ var Creator = function () {
     /* Adds Experience section to resume */
 
   }, {
-    key: "addExperiences",
+    key: 'addExperiences',
     value: function addExperiences() {
       var _this3 = this;
 
@@ -125,26 +131,10 @@ var Creator = function () {
       });
     }
 
-    /* Generates Docx and Pdf File in the root directory of the project */
-
-  }, {
-    key: "generateFiles",
-    value: function generateFiles() {
-      var docExporter = new Doc.LocalPacker(this.document);
-      docExporter.pack(this.person.name + "_resume").then(function () {
-        console.log("Docx Generated");
-        console.log("Building PDF, Might take some time.....");
-      });
-      var pdfExporter = new Doc.LocalPacker(this.document);
-      pdfExporter.packPdf(this.person.name + "_resume").then(function () {
-        console.log("PDF Generated");
-      });
-    }
-
     /** Creates Institution header with date like Work, School */
 
   }, {
-    key: "createInstitutionHeader",
+    key: 'createInstitutionHeader',
     value: function createInstitutionHeader(institutionName) {
       var dateText = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'Current';
 
@@ -160,7 +150,7 @@ var Creator = function () {
     /* Returns Bullet text of the input */
 
   }, {
-    key: "createBullet",
+    key: 'createBullet',
     value: function createBullet(text) {
       return new Doc.Paragraph(text).bullet();
     }
@@ -168,7 +158,7 @@ var Creator = function () {
     /* Returns Empty Paragraph use for creating line break */
 
   }, {
-    key: "addBreak",
+    key: 'addBreak',
     value: function addBreak() {
       var paragraph = new Doc.Paragraph(" ");
       return paragraph;
@@ -177,7 +167,7 @@ var Creator = function () {
     /* Adds Logo of the institution, if available in the data-source directory */
 
   }, {
-    key: "addLogo",
+    key: 'addLogo',
     value: function addLogo(logo) {
       try {
         var _logo = this.document.createImage('./src/data-source/' + _logo);
@@ -186,6 +176,26 @@ var Creator = function () {
       } catch (error) {
         console.log("Error: " + logo + " not found, Skipping adding that image");
       }
+    }
+
+    /* Generates Docx and Pdf File in the root directory of the project */
+
+  }, {
+    key: 'generateFiles',
+    value: function generateFiles() {
+      var docExporter = new Doc.LocalPacker(this.document, _Styler2.default);
+      docExporter.pack(this.person.name + "_resume").then(function () {
+        console.log("Docx Generated");
+        console.log("Building PDF, Might take some time.....");
+      }).catch(function (error) {
+        console.log(error);
+      });
+      var pdfExporter = new Doc.LocalPacker(this.document);
+      pdfExporter.packPdf(this.person.name + "_resume").then(function () {
+        console.log("PDF Generated");
+      }).catch(function (error) {
+        console.log(error);
+      });
     }
   }]);
 

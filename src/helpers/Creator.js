@@ -1,5 +1,5 @@
 const Doc = require('docx');
-
+import styles from './Styler';
 class Creator {
 
   /* Constructor, takes person object as input, and also instantiates document */
@@ -84,22 +84,6 @@ class Creator {
       this.document.addParagraph(this.addBreak());
     });
   }
-    
-  /* Generates Docx and Pdf File in the root directory of the project */
-  generateFiles() {
-    let docExporter = new Doc.LocalPacker(this.document);
-    docExporter.pack(this.person.name + "_resume")
-            .then(() => {
-              console.log("Docx Generated");
-              console.log("Building PDF, Might take some time.....");
-            });
-    let pdfExporter = new Doc.LocalPacker(this.document);
-    pdfExporter.packPdf(this.person.name + "_resume")
-            .then(() => {
-              console.log("PDF Generated");
-            });
-    
-  }
 
   /** Creates Institution header with date like Work, School */
   createInstitutionHeader(institutionName, dateText = 'Current') {
@@ -133,6 +117,28 @@ class Creator {
     catch (error){
       console.log("Error: " + logo + " not found, Skipping adding that image");
     }
+  }
+
+   /* Generates Docx and Pdf File in the root directory of the project */
+   generateFiles() {
+    let docExporter = new Doc.LocalPacker(this.document, styles);
+    docExporter.pack(this.person.name + "_resume")
+            .then(() => {
+              console.log("Docx Generated");
+              console.log("Building PDF, Might take some time.....");
+            })
+            .catch(error => {
+              console.log(error);
+            });
+    let pdfExporter = new Doc.LocalPacker(this.document);
+    pdfExporter.packPdf(this.person.name + "_resume")
+            .then(() => {
+              console.log("PDF Generated");
+            })
+            .catch(error => {
+              console.log(error);
+            });
+    
   }
 }
 
