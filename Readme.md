@@ -1,6 +1,6 @@
 # Resume-Generator!
 
-Creates Resume from json data source using [docx] (https://github.com/dolanmiu/docx) library.
+Creates Resume from json data source using [docx](https://github.com/dolanmiu/docx) library.
 
 ## Usage 
 * Clone [this](https://github.com/zeek-r/resume-generator)
