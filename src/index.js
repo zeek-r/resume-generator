@@ -1,50 +1,66 @@
 import Doc from './helpers/Creator';
 import inquirer from './helpers/Inquirer';
+
 const minimist = require('minimist')(process.argv.splice(2)) ;
 
-
-async function run() {
+/* Gets meta data for normal run */
+async function runNormal() {
   const initialData = await inquirer.askInitialData();
   fileProcessor(initialData);
 }
 
-function commandLine() {
+/* Gets meta data from comman line */
+function commandLine() { 
   if(minimist.help) {
-    const Usage = 'Usage: resume-generator --flags = values\n-flags :\n--name, -n = [fullName of the Person],\n--file, -f = [source filename for data],\n--font, -fn = [font Name for the document](optional),\n--fontsize, -fs = [font size of the document body](optional)\n--help = Help Menu';
+    const Usage = 'Usage: resume-generator --flags = values\nflags :\n--name, -n = [fullName of the Person],\n--file  = [source filename for data],\n--font  = [font Name for the document](optional),\n--fontsize = [font size of the document body](optional)\n--help = Help Menu';
     console.log(Usage);
     process.exit(0);
   }
   else {
     const initialData = {
-      fullName : minimist.name || minimist.n,
-      fileName : minimist.file || minimist.f,
-      fontName : minimist.font || minimist.fn,
-      fontSize : minimist.fontsize || minimist.fs
+      fullName : minimist.name,
+      fileName : minimist.file,
+      fontName : minimist.font 
+    }
+    if(!minimist.font){
+      console.log(minimist.font);
+      initialData.fontName = 'Sans Serif';
+    }
+    if(!minimist.fontsize) {
+      initialData.fontSize = 9;
+    }
+    else {
+      initialData.fontSize = parseInt(minimist.fontsize, 10);
     }
     fileProcessor(initialData);
-    process.exit(0);
   }
+  
 }
 
 function main() {
   if(Object.keys(minimist).length === 1 ) {
-    run();
+    runNormal();
   }
   else {
    commandLine();
   }
 }
 
-main();
-
 function fileProcessor(initialData) {
   try {
-    let dataSource = require("../" + initialData.fileName);
+    let dataSource = require("../data-source/" + initialData.fileName);
     dataSource.default.name = initialData.fullName;
-    const doc  = new Doc(dataSource['default']);
+    const styles = {
+      fontName : initialData.fontName,
+      fontSize : initialData.fontSize, 
+    }
+    const doc  = new Doc(dataSource['default'], styles);
     doc.createResume();
   } catch(error) {
       console.log("Error opening " + initialData.fileName +" , Please specify the filename correctly");
       console.log(__dirname);
+      console.log(error);
   }
 }
+
+main();

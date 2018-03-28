@@ -1,4 +1,6 @@
 const inquirer   = require('inquirer');
+const fs = require('fs');
+
 
 module.exports = {
   askInitialData: () => {
@@ -12,23 +14,25 @@ module.exports = {
         name: 'fullName',
         type: 'input',
         message: 'Enter your Full Name for the resume:',
-        validate: function(value) {
+        default: 'User Name',
+        validate: (value) => {
           if (value.length) {
             return true;
-          } else {
-            return 'Please enter a valid Name: ';
-          }
+          } 
+          return 'Please enter a valid Name: ';
         }
       }, 
       {
-        name: 'font',
+        name: 'fontName',
         type: 'input',
         message: '(Optional) Please enter the name of the font to use:',
+        default : 'Sans Serif',
       },
       {
-        name: 'font-size',
+        name: 'fontSize',
         type: 'input',
         message: '(Optional) Please enter the font size for the body of resume:',
+        default: 9,
       },
     ];
     return inquirer.prompt(questions);

@@ -1,10 +1,11 @@
 const Doc = require('docx');
-import styles from './Styler';
+
 class Creator {
 
   /* Constructor, takes person object as input, and also instantiates document */
-  constructor(person) {
-    this.person = person;
+  constructor(resume, styles) {
+    this.person = resume;
+    this.styles = styles;
     this.document = new Doc.Document();
     this.document.Header.createParagraph(" ");
     this.document.Footer.createParagraph(" ");
@@ -22,7 +23,7 @@ class Creator {
   /* Adds Name title to Resume */
   addTitle(title) {
     const mainTitle = new Doc.Paragraph();
-    const text = new Doc.TextRun(title).bold().allCaps();
+    const text = this.createCustomStyle(title).bold().allCaps();
     mainTitle.addRun(text);
     mainTitle.center().heading1().thematicBreak();
     this.document.addParagraph(mainTitle);
@@ -32,7 +33,7 @@ class Creator {
   /* Adds Section title like Skill, Education etc to Resume */
   addSectionTitle(title) {
     const sectionTitle = new Doc.Paragraph();
-    const text = new Doc.TextRun(title).bold().allCaps();
+    const text = this.createCustomStyle(title).bold().allCaps();
     sectionTitle.addRun(text);
     sectionTitle.center().heading2().thematicBreak();
     this.document.addParagraph(sectionTitle);
@@ -40,11 +41,11 @@ class Creator {
 
   /* Creates Headers inside Sections like Skill, Education */
   addSubSectionTitle(title) {
-    const paragraph = new Doc.Paragraph();
-    const subSectionTitle = new Doc.TextRun(title).bold().underline().allCaps();
-    paragraph.addRun(subSectionTitle);
-    paragraph.center();
-    this.document.addParagraph(paragraph);
+    const subSecTitle = new Doc.Paragraph();
+    const text = this.createCustomStyle(title).bold().allCaps().underline();
+    subSecTitle.addRun(text);
+    subSecTitle.center();
+    this.document.addParagraph(subSecTitle);
   }
 
   /* Adds Skill Section to resume */
@@ -88,18 +89,27 @@ class Creator {
   /** Creates Institution header with date like Work, School */
   createInstitutionHeader(institutionName, dateText = 'Current') {
     const paragraph = new Doc.Paragraph().maxRightTabStop();
-    const institution = new Doc.TextRun(institutionName).bold();
-    const date = new Doc.TextRun(dateText).tab().bold();
-
+    const institution = this.createCustomStyle(institutionName).bold().size(2*this.styles.fontSize + 2);
+    const date = this.createCustomStyle(dateText).tab().bold();
     paragraph.addRun(institution);
     paragraph.addRun(date);
     this.document.addParagraph(paragraph);
   }
 
-  /* Returns Bullet text of the input */
-  createBullet(text) {
-    return new Doc.Paragraph(text).bullet();
+  /* Creates style for custom font and size */
+  createCustomStyle(text) {
+    const formattedText = new Doc.TextRun(text)
+    return formattedText.font(this.styles.fontName);
   }
+
+  /* Returns Bullet Points */
+  createBullet(text) {
+    const paragraph = new Doc.Paragraph();
+    const detail = this.createCustomStyle(text).size(2*this.styles.fontSize);
+    paragraph.addRun(detail).bullet();
+    return paragraph;
+  }
+
 
   /* Returns Empty Paragraph use for creating line break */
   addBreak() {
@@ -110,7 +120,7 @@ class Creator {
   /* Adds Logo of the institution, if available in the data-source directory */
   addLogo(logo) {
     try {
-      const logo = this.document.createImage('./src/data-source/'+ logo);
+      const logo = this.document.createImage('../../data-source/'+ logo);
       logo.right();
       this.document.addParagraph(logo);
     }
@@ -121,7 +131,7 @@ class Creator {
 
    /* Generates Docx and Pdf File in the root directory of the project */
    generateFiles() {
-    let docExporter = new Doc.LocalPacker(this.document, styles);
+    let docExporter = new Doc.LocalPacker(this.document);
     docExporter.pack(this.person.name + "_resume")
             .then(() => {
               console.log("Docx Generated");
